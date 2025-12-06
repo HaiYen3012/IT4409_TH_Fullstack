@@ -67,4 +67,22 @@ router.put('/students/:id', async (req, res) => {
   }
 });
 
+// ===================================================================
+// BÀI 4: API XÓA HỌC SINH
+// ===================================================================
+
+// DELETE /api/students/:id - Xóa học sinh
+router.delete('/students/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const deleted = await Student.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    res.json({ message: "Đã xóa học sinh", id: deleted._id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

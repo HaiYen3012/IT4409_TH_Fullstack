@@ -50,6 +50,26 @@ function HomePage() {
   };
 
   // ===================================================================
+  // BÀI 4: XỬ LÝ XÓA HỌC SINH
+  // ===================================================================
+  
+  const handleDelete = (id, name) => {
+    // Xác nhận trước khi xóa với tên học sinh
+    if (!window.confirm(`Bạn có chắc muốn xóa học sinh "${name}"?`)) return;
+    
+    axios.delete(`http://localhost:5000/api/students/${id}`)
+      .then(res => {
+        console.log(res.data.message);
+        // Xóa học sinh khỏi danh sách trong state
+        setStudents(prevList => prevList.filter(s => s._id !== id));
+      })
+      .catch(err => {
+        console.error("Lỗi khi xóa:", err);
+        alert("Lỗi khi xóa học sinh: " + (err.response?.data?.error || err.message));
+      });
+  };
+
+  // ===================================================================
   // BÀI 1: HIỂN THỊ GIAO DIỆN
   // ===================================================================
   
@@ -73,6 +93,7 @@ function HomePage() {
       {/* ============================================================= */}
       {/* BÀI 1: BẢNG DANH SÁCH HỌC SINH */}
       {/* BÀI 3: THÊM NÚT CHỈNH SỬA */}
+      {/* BÀI 4: THÊM NÚT XÓA */}
       {/* ============================================================= */}
       <div className="student-list">
         <h2>Danh sách học sinh</h2>
@@ -100,6 +121,12 @@ function HomePage() {
                       className="edit-btn"
                     >
                       Sửa
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(student._id, student.name)}
+                      className="delete-btn"
+                    >
+                      Xóa
                     </button>
                   </td>
                 </tr>
