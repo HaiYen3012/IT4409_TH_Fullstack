@@ -16,8 +16,8 @@ app.use(express.json());
 
 // Kết nối MongoDB
 mongoose.connect('mongodb://localhost:27017/student_db')
-  .then(() => console.log("✓ Đã kết nối MongoDB thành công"))
-  .catch(err => console.error("✗ Lỗi kết nối MongoDB:", err));
+  .then(() => console.log("Đã kết nối MongoDB thành công"))
+  .catch(err => console.error("Lỗi kết nối MongoDB:", err));
 
 // Sử dụng routes API
 app.use('/api', studentRoutes);

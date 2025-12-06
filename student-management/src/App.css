@@ -35,6 +35,23 @@ h2 {
   justify-content: center;
 }
 
+/* Form chỉnh sửa hiển thị dọc */
+.edit-form form {
+  flex-direction: column;
+  max-width: 400px;
+}
+
+.edit-form input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.edit-form button {
+  width: 100%;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
 .form-container input {
   padding: 10px;
   border: 1px solid #ddd;
@@ -42,6 +59,7 @@ h2 {
   font-size: 14px;
   flex: 1;
   min-width: 120px;
+  box-sizing: border-box;
 }
 
 .form-container input:focus {
@@ -109,6 +127,22 @@ tr:nth-child(even) {
 
 tr:hover {
   background-color: #ddd;
+}
+
+/* Nút thao tác */
+.edit-btn {
+  padding: 6px 12px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.edit-btn:hover {
+  background-color: #0b7dda;
 }
 
 /* Responsive design */

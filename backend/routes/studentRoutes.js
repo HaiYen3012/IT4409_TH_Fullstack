@@ -32,4 +32,39 @@ router.post('/students', async (req, res) => {
   }
 });
 
+// ===================================================================
+// BÀI 3: API CHỈNH SỬA THÔNG TIN HỌC SINH
+// ===================================================================
+
+// GET /api/students/:id - Lấy thông tin 1 học sinh theo ID
+router.get('/students/:id', async (req, res) => {
+  try {
+    const student = await Student.findById(req.params.id);
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    res.json(student);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT /api/students/:id - Cập nhật thông tin học sinh
+router.put('/students/:id', async (req, res) => {
+  try {
+    // Tìm và cập nhật học sinh theo ID
+    const updatedStu = await Student.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true } // Trả về document sau khi update
+    );
+    if (!updatedStu) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    res.json(updatedStu);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 module.exports = router;
