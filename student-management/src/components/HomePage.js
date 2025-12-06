@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AddStudent from './AddStudent';
 import SearchBar from './SearchBar';
+import SortButton from './SortButton';
 import '../App.css';
 
 function HomePage() {
@@ -74,6 +75,19 @@ function HomePage() {
   );
 
   // ===================================================================
+  // BÀI 6: SẮP XẾP DANH SÁCH HỌC SINH THEO TÊN
+  // ===================================================================
+  const [sortAsc, setSortAsc] = useState(true);
+  
+  const sortedStudents = [...filteredStudents].sort((a, b) => {
+    const nameA = a.name.toLowerCase();
+    const nameB = b.name.toLowerCase();
+    if (nameA < nameB) return sortAsc ? -1 : 1;
+    if (nameA > nameB) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
+  // ===================================================================
   // HIỂN THỊ GIAO DIỆN
   // ===================================================================
   if (loading) {
@@ -94,10 +108,13 @@ function HomePage() {
       {/* BÀI 5: Tìm kiếm học sinh */}
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
-      {/* BÀI 1, 3, 4, 5: Bảng danh sách học sinh */}
+      {/* BÀI 6: Sắp xếp học sinh */}
+      <SortButton sortAsc={sortAsc} setSortAsc={setSortAsc} />
+
+      {/* BÀI 1, 3, 4, 5, 6: Bảng danh sách học sinh */}
       <div className="student-list">
         <h2>Danh sách học sinh</h2>
-        {filteredStudents.length === 0 ? (
+        {sortedStudents.length === 0 ? (
           <p>{searchTerm ? "Không tìm thấy học sinh nào" : "Chưa có học sinh nào"}</p>
         ) : (
           <table border="1" cellPadding="10" cellSpacing="0">
@@ -110,7 +127,7 @@ function HomePage() {
               </tr>
             </thead>
             <tbody>
-              {filteredStudents.map((student) => (
+              {sortedStudents.map((student) => (
                 <tr key={student._id}>
                   <td>{student.name}</td>
                   <td>{student.age}</td>
