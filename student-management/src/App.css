@@ -96,6 +96,27 @@ h2 {
   font-weight: bold;
 }
 
+/* ===== BÀI 5: STYLES CHO Ô TÌM KIẾM ===== */
+.search-container {
+  margin: 20px auto;
+  max-width: 900px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
 /* Styles cho danh sách học sinh */
 .student-list {
   margin-top: 20px;

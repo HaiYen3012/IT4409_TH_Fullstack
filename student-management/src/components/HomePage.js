@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AddStudent from './AddStudent';
+import SearchBar from './SearchBar';
 import '../App.css';
 
 function HomePage() {
   // ===================================================================
   // BÀI 1: STATE VÀ LOGIC HIỂN THỊ DANH SÁCH HỌC SINH
   // ===================================================================
-  
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,7 +36,6 @@ function HomePage() {
   // ===================================================================
   // BÀI 2: XỬ LÝ KHI THÊM HỌC SINH MỚI
   // ===================================================================
-  
   const handleStudentAdded = (newStudent) => {
     setStudents(prev => [...prev, newStudent]);
   };
@@ -44,7 +43,6 @@ function HomePage() {
   // ===================================================================
   // BÀI 3: XỬ LÝ CHỈNH SỬA HỌC SINH
   // ===================================================================
-  
   const handleEdit = (id) => {
     navigate(`/edit/${id}`);
   };
@@ -52,15 +50,12 @@ function HomePage() {
   // ===================================================================
   // BÀI 4: XỬ LÝ XÓA HỌC SINH
   // ===================================================================
-  
   const handleDelete = (id, name) => {
-    // Xác nhận trước khi xóa với tên học sinh
     if (!window.confirm(`Bạn có chắc muốn xóa học sinh "${name}"?`)) return;
     
     axios.delete(`http://localhost:5000/api/students/${id}`)
       .then(res => {
         console.log(res.data.message);
-        // Xóa học sinh khỏi danh sách trong state
         setStudents(prevList => prevList.filter(s => s._id !== id));
       })
       .catch(err => {
@@ -70,9 +65,17 @@ function HomePage() {
   };
 
   // ===================================================================
-  // BÀI 1: HIỂN THỊ GIAO DIỆN
+  // BÀI 5: TÌM KIẾM HỌC SINH THEO TÊN
   // ===================================================================
+  const [searchTerm, setSearchTerm] = useState("");
   
+  const filteredStudents = students.filter(s =>
+    s.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // ===================================================================
+  // HIỂN THỊ GIAO DIỆN
+  // ===================================================================
   if (loading) {
     return <div className="App"><h1>Đang tải dữ liệu...</h1></div>;
   }
@@ -85,20 +88,17 @@ function HomePage() {
     <div className="App">
       <h1>Quản Lý Học Sinh</h1>
       
-      {/* ============================================================= */}
-      {/* BÀI 2: FORM THÊM HỌC SINH MỚI */}
-      {/* ============================================================= */}
+      {/* BÀI 2: Form thêm học sinh */}
       <AddStudent onStudentAdded={handleStudentAdded} />
 
-      {/* ============================================================= */}
-      {/* BÀI 1: BẢNG DANH SÁCH HỌC SINH */}
-      {/* BÀI 3: THÊM NÚT CHỈNH SỬA */}
-      {/* BÀI 4: THÊM NÚT XÓA */}
-      {/* ============================================================= */}
+      {/* BÀI 5: Tìm kiếm học sinh */}
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
+      {/* BÀI 1, 3, 4, 5: Bảng danh sách học sinh */}
       <div className="student-list">
         <h2>Danh sách học sinh</h2>
-        {students.length === 0 ? (
-          <p>Chưa có học sinh nào</p>
+        {filteredStudents.length === 0 ? (
+          <p>{searchTerm ? "Không tìm thấy học sinh nào" : "Chưa có học sinh nào"}</p>
         ) : (
           <table border="1" cellPadding="10" cellSpacing="0">
             <thead>
@@ -110,7 +110,7 @@ function HomePage() {
               </tr>
             </thead>
             <tbody>
-              {students.map((student) => (
+              {filteredStudents.map((student) => (
                 <tr key={student._id}>
                   <td>{student.name}</td>
                   <td>{student.age}</td>
