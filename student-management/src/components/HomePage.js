@@ -4,6 +4,7 @@ import axios from 'axios';
 import AddStudent from './AddStudent';
 import SearchBar from './SearchBar';
 import SortButton from './SortButton';
+import StudentList from './StudentList';
 import '../App.css';
 
 function HomePage() {
@@ -49,20 +50,11 @@ function HomePage() {
   };
 
   // ===================================================================
-  // BÀI 4: XỬ LÝ XÓA HỌC SINH
+  // BÀI 4: XỪC LÝ XÓA HỌC SINH
   // ===================================================================
-  const handleDelete = (id, name) => {
-    if (!window.confirm(`Bạn có chắc muốn xóa học sinh "${name}"?`)) return;
-    
-    axios.delete(`http://localhost:5000/api/students/${id}`)
-      .then(res => {
-        console.log(res.data.message);
-        setStudents(prevList => prevList.filter(s => s._id !== id));
-      })
-      .catch(err => {
-        console.error("Lỗi khi xóa:", err);
-        alert("Lỗi khi xóa học sinh: " + (err.response?.data?.error || err.message));
-      });
+  const handleDelete = (id) => {
+    // Xóa học sinh khỏi danh sách trong state
+    setStudents(prevList => prevList.filter(s => s._id !== id));
   };
 
   // ===================================================================
@@ -112,46 +104,12 @@ function HomePage() {
       <SortButton sortAsc={sortAsc} setSortAsc={setSortAsc} />
 
       {/* BÀI 1, 3, 4, 5, 6: Bảng danh sách học sinh */}
-      <div className="student-list">
-        <h2>Danh sách học sinh</h2>
-        {sortedStudents.length === 0 ? (
-          <p>{searchTerm ? "Không tìm thấy học sinh nào" : "Chưa có học sinh nào"}</p>
-        ) : (
-          <table border="1" cellPadding="10" cellSpacing="0">
-            <thead>
-              <tr>
-                <th>Họ tên</th>
-                <th>Tuổi</th>
-                <th>Lớp</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedStudents.map((student) => (
-                <tr key={student._id}>
-                  <td>{student.name}</td>
-                  <td>{student.age}</td>
-                  <td>{student.class}</td>
-                  <td>
-                    <button 
-                      onClick={() => handleEdit(student._id)}
-                      className="edit-btn"
-                    >
-                      Sửa
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(student._id, student.name)}
-                      className="delete-btn"
-                    >
-                      Xóa
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      <StudentList 
+        students={sortedStudents}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        searchTerm={searchTerm}
+      />
     </div>
   );
 }
